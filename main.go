@@ -20,6 +20,11 @@ type User struct {
 	Class string `json:"class"`
 }
 
+type UpdateUser struct {
+	Name  string `json:"name"`
+	Class string `json:"class"`
+}
+
 var (
 	users = map[string]User{
 		"user1": {
@@ -113,6 +118,83 @@ func main() {
 	// ASSESSMENT:
 	// membuat API PUT: mengupdate user identity dengan yang dapat diubah hanya name dan class
 	// membuat API DELETE: mendelete user dengan query user_code
+
+	// untuk mengupdate user
+	groupUser.PUT("", func(ctx *gin.Context) {
+		// get query user code
+		userCode := ctx.Query("user_code")
+		if err := checkUserCode(userCode); err != nil {
+			// handle error, gunakan AbortWithStatusJSON
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
+				"error": "user_code cannot be empty",
+				"type":  "BAD_REQUEST"})
+			return
+		}
+		// mengambil body
+		var updateUser UpdateUser
+		// function ini berfungsi untuk
+		// memasukkan data body ke struct kita
+		// dengan cara memasukkan address of variable
+		if err := ctx.ShouldBind(&updateUser); err != nil {
+			// handle error, gunakan AbortWithStatusJSON
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
+				"error": "invalid payload",
+				"type":  "BAD_REQUEST"})
+			return
+		}
+
+		// cari user dengan user code
+		u, ok := users[userCode]
+		if !ok {
+			// handle error, gunakan AbortWithStatusJSON
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
+				"error": "user code not found",
+				"type":  "BAD_REQUEST"})
+			return
+		}
+
+		// mengupdate user payload ke map
+		u = User{
+			Code:  u.Code,
+			Name:  updateUser.Name,
+			Class: updateUser.Class,
+		}
+		users[userCode] = u
+
+		// response success
+		ctx.JSON(http.StatusAccepted, map[string]any{
+			"message": "user successfully updated",
+			"payload": u})
+	})
+
+	// untuk mendelete user
+	groupUser.DELETE("", func(ctx *gin.Context) {
+		// get query user code
+		userCode := ctx.Query("user_code")
+		if err := checkUserCode(userCode); err != nil {
+			// handle error, gunakan AbortWithStatusJSON
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
+				"error": "user_code cannot be empty",
+				"type":  "BAD_REQUEST"})
+			return
+		}
+
+		// cari user dengan user code
+		_, ok := users[userCode]
+		if !ok {
+			// handle error, gunakan AbortWithStatusJSON
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, map[string]string{
+				"error": "user code not found",
+				"type":  "BAD_REQUEST"})
+			return
+		}
+
+		// success JSON
+		delete(users, userCode)
+		ctx.JSON(http.StatusOK, map[string]string{
+			"message": fmt.Sprintf("%s has been deleted", userCode),
+		})
+	})
 
 	// perlu menjalankan web engine
 	if err := ginEngine.Run(PORT); err != nil {
