@@ -1,65 +1,28 @@
 # FGA Kominfo Learning
 
-## Day 8
-Membuat 1st Web App (Backend Server):
-Membuat user beserta order history dari user
+## Day 9
 
-- Membuat Aplikasi 
-    - Config
-        - harus connect ke DATABASE (postgres)
-    - Membuat Domain
-        di level ini hanya akan ada interface (method) dan struct (model/entity)
-        - User
-            - menambahkan user
-            - get user detail
-        - Order
-            - menambahkan order terhadap user
-            - mendapatkan semua order dari suatu user
-    - Membuat Repository
-        layer untuk mendapatkan data, query dan semua yang berhubungan dengan proses mendapatkan data, akan ada di layer ini
-        - repo user
-        - repo order
-    - Membuat Usecase
-        layer untuk menjalankan logic (business logic): masking data, checking data, dll
-        - usecase untuk user
-        - usercase untuk order
-    - http server (gin gonic)
-        - membuat handler
-            layer untuk mendapatkan data yang diberikan oleh client pada suatu request (binding body payload, mendapatkan query paramater)
-            - order
-            - user
-        - membuat router
-            layer untuk menamakan API kita (path API kita) sehingga bisa dikenali oleh client: /v1/user, /v1/order
-            - order
-            - user
-        - membuat documentation untuk API 
-- Json package
-    - apa itu json
-    - kenapa json ada
-    - json di golang (tag/annotation)
-        - json marshall
-        - json unmarshall
-        - transform from map to struct
-- API Documentation (Swagger)
-    ketika membuat API, cuma developer yang tau apa
-    body payload, header payload yang diperlukan 
-    untuk mengakses atau merequest API tersebut
-    
-    api contract -> memberikan dokumentasi cara penggunaan
-    API yang temen temen buat. supaya nanti team FrontEnd
-    bisa langsung menggunakan API yang sudah dibuat.
+Authentication:
+    - apa itu authentication
+        -> mengidentifikasi bahw request itu diminta oleh user atau client yang authentic dan dikenali oleh server.
+            masukin username dan password.
 
-    standard documentation -> OpenAPI
-    ref: https://www.openapis.org/
+    - kenapa ada authentication
+        -> supaya request dikenali oleh server. kalau misal ga dikenali giman? 
+            - mengembalikan error ke client
+                - USER NOT FOUND
+                - WRONG PASSWORD
+        
+    - apa bedanya dengan authorization
+        apakah kita berhak merequest/mengunjungi halaman atau API yang kita HIT. Kalaupun berhak, apa aja yang boleh dilakukan.
+            - UNAUTHORIZED
 
-    - Apa itu swagger
-        tools yang mempermudah untuk pembuatan API Doc
-        ref: https://swagger.io/
-    - kenapa swagger ada
-        untuk membantu BE team, dalam pembuatan standard API Doc
-        yang dapat dibaca oleh semua TEAM dengan format OpenAPI
-        ex: xendit, twitter, whatsapp
-    - implementasi menggunakan swaggo
+    - jenis method authentication:
+    authentication / authorization akan diberikan client ke server dalam bentuh PAYLOAD HEADER (key: Authorization)
+        - Basic Auth: langsung memberikan username dan password, dalam bentuk STRING ENCODED BASE64
+        - OAuth: memberikan informasi dalam bentuk string TOKENIZE
+            - JWT (JSON Web Token)
+
+    - real case condition and security
 
 ---
-![day8](./day8.png)
