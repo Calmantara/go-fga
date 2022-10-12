@@ -13,7 +13,7 @@ import (
 	docs "github.com/Calmantara/go-fga/docs"
 	userrepo "github.com/Calmantara/go-fga/pkg/repository/user"
 	userhandler "github.com/Calmantara/go-fga/pkg/server/http/handler/user"
-	userrouter "github.com/Calmantara/go-fga/pkg/server/http/router/v1"
+	v1 "github.com/Calmantara/go-fga/pkg/server/http/router/v1"
 	userusecase "github.com/Calmantara/go-fga/pkg/usecase/user"
 	swaggerfiles "github.com/swaggo/files"
 	ginswagger "github.com/swaggo/gin-swagger"
@@ -48,10 +48,13 @@ func main() {
 	ginEngine := engine.NewGinHttp(engine.Config{
 		Port: ":8080",
 	})
+
+	// setiap request yang datang ke API ini,
+	// dia akan melalui gin.Recovery dan gin.Logger
+	// .USE disini, adalah cara untuk memasukkan middleware juga
 	ginEngine.GetGin().Use(
 		gin.Recovery(),
-		gin.Logger(),
-	)
+		gin.Logger())
 
 	startTime := time.Now()
 	ginEngine.GetGin().GET("/", func(ctx *gin.Context) {
@@ -97,8 +100,8 @@ func main() {
 	// initiate handler
 	useHandler := userhandler.NewUserHandler(userUsecase)
 	// initiate router
-	userrouter.NewUserRouter(ginEngine, useHandler).Routers()
-
+	v1.NewUserRouter(ginEngine, useHandler).Routers()
+	v1.NewLoginRouter(ginEngine).Routers()
 	// ASSESSMENT
 	// buat API
 	// - get user

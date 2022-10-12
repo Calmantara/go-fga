@@ -1,28 +1,40 @@
 # FGA Kominfo Learning
 
-## Day 9
+## Day 10
 
-Authentication:
-    - apa itu authentication
-        -> mengidentifikasi bahw request itu diminta oleh user atau client yang authentic dan dikenali oleh server.
-            masukin username dan password.
+Context:
+    - apa itu context
+    context is a standard package of Golang that makes it easy to pass request-scoped values, cancelation signals, and deadlines across API boundaries to all the goroutines involved in handling a request.
+    
+    - context di golang
+    - use case:
+        - deadline & timeout memberikan deadline pada context dan mengecheck apakah context masih berada dalam range waktu tertente
+        - cancel ketika ctx sudah tidak valid lagi, biasana cancel ini akan selalu dipanggil di akhir function (bp: defer)
+        - value kita bisa memberikan key-value pair, dan mengakses key-value pair tsb pada method/function manapun yang menerima suatu context
 
-    - kenapa ada authentication
-        -> supaya request dikenali oleh server. kalau misal ga dikenali giman? 
-            - mengembalikan error ke client
-                - USER NOT FOUND
-                - WRONG PASSWORD
-        
-    - apa bedanya dengan authorization
-        apakah kita berhak merequest/mengunjungi halaman atau API yang kita HIT. Kalaupun berhak, apa aja yang boleh dilakukan.
-            - UNAUTHORIZED
+Middleware:
+    - apa itu middleware
+    - kenapa middleware ada
+    - middleware x cotext
 
-    - jenis method authentication:
-    authentication / authorization akan diberikan client ke server dalam bentuh PAYLOAD HEADER (key: Authorization)
-        - Basic Auth: langsung memberikan username dan password, dalam bentuk STRING ENCODED BASE64
-        - OAuth: memberikan informasi dalam bentuk string TOKENIZE
-            - JWT (JSON Web Token)
-
-    - real case condition and security
+    middleware bisa diassign di:
+        - gin router group
+        - gin method (POST, GET, etc)
+        - gin.USE di paling depan (berlaku untuk semua request yang masokk)
+JWT:
+    - encoding and decoding concept
+        - base64
+        - hash
+    - apa itu jwt
+    - kenapa jwt ada
+    - bagian dari JWT
+        - header
+        - body
+        - signature
+    - playing around with katara's jwt lib
+        - encode
+        - decode
+        - verify
 
 ---
+[!alt_day10](./day10.drawio.png)

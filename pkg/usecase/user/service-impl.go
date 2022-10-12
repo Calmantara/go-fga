@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"log"
+	"time"
 
 	"github.com/Calmantara/go-fga/pkg/domain/user"
 )
@@ -42,6 +43,14 @@ func (u *UserUsecaseImpl) GetUserByEmailSvc(ctx context.Context, email string) (
 func (u *UserUsecaseImpl) InsertUserSvc(ctx context.Context, input user.User) (result user.User, err error) {
 	log.Printf("%T - InsertUserSvc is invoked]\n", u)
 	defer log.Printf("%T - InsertUserSvc executed\n", u)
+
+	// function ini tidak dijalankan lebih dari 2 detik
+	ctx, cancel := context.WithTimeout(ctx, 1000*time.Second)
+	defer cancel()
+
+	// set value in context
+	ctx = context.WithValue(ctx, "KEY1", "VALUE1")
+
 	// get user for input email first
 	usrCheck, err := u.GetUserByEmailSvc(ctx, input.Email)
 
