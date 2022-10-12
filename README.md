@@ -35,6 +35,8 @@ JWT:
         - encode
         - decode
         - verify
-
+https://www.base64decode.org/
+https://emn178.github.io/online-tools/sha1.html
+https://jwt.io/
 ---
 [!alt_day10](./day10.drawio.png)
