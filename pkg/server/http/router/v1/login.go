@@ -63,7 +63,7 @@ func (u *LoginImpl) post() {
 			NotValidBefore: timeNow.Unix(),
 			ExpiredAt:      timeNow.Add(24 * time.Hour).Unix(),
 		}
-		accessToken := crypto.CreateJWT(ctx, claimAccess)
+		accessToken, _ := crypto.CreateJWT(ctx, claimAccess)
 
 		claimRefresh := claim.Access{
 			JWTID:          uuid.New(),
@@ -76,7 +76,7 @@ func (u *LoginImpl) post() {
 			NotValidBefore: timeNow.Unix(),
 			ExpiredAt:      timeNow.Add(1000 * time.Hour).Unix(),
 		}
-		refreshToken := crypto.CreateJWT(ctx, claimRefresh)
+		refreshToken, _ := crypto.CreateJWT(ctx, claimRefresh)
 
 		// access token ini akan digunakan selanjutnya
 		ctx.JSON(http.StatusOK, message.Response{

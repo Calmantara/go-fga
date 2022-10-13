@@ -1,42 +1,50 @@
 # FGA Kominfo Learning
 
-## Day 10
+## Day 11
 
-Context:
-    - apa itu context
-    context is a standard package of Golang that makes it easy to pass request-scoped values, cancelation signals, and deadlines across API boundaries to all the goroutines involved in handling a request.
+Testing in Development
+     - SDLC (software development life cycle)
+        sdlc -> life cycle mulai dari menerima req, planning, designing, implementation, test, hingga evaluation
+     - STLC (software test life cycle)
+        stlc -> test life cycle (yang biasa dilakukan dev / qa) untuk membuat test case hingga automation test
+     - Testing in software development
+        - unit test
+            test yang dibuat untuk mengetest semua scenario yang bisa terjadi di suatu function (dev)
+        - integration test
+            test yang dilakukan untuk mencoba integrasi dalama 1 fitur (baik cross team atau dalam 1 code base) (dev) 
+        - qa test
+            test yang dilakukan baik secara manual atau otomatis untuk menjawab test case yang sudah dibuat dalam stlc (qa)
+            - automation test
+            - manual test
+            - security test (security engineer)
+            - load test
+                supaya kita tau apakah logic codingan kita, sudah optimized atau belum
+                sehingga bisa menampung load / request dalam waktu yang bersamaan sangat banyak
+        - UAT test 
+            test yang dilakukan oleh pemberi req (business team), untuk memastikan tidak adanya missed req, tidak ada bug, dan siap untuk naik production (business)
+        - prod test / smoke test
+            test singkat yang dilakukan ketika sudah naik ke production (qa)
     
-    - context di golang
-    - use case:
-        - deadline & timeout memberikan deadline pada context dan mengecheck apakah context masih berada dalam range waktu tertente
-        - cancel ketika ctx sudah tidak valid lagi, biasana cancel ini akan selalu dipanggil di akhir function (bp: defer)
-        - value kita bisa memberikan key-value pair, dan mengakses key-value pair tsb pada method/function manapun yang menerima suatu context
+    di golang:
+        - unit test
+        - test coverage 
+            mendeteksi sudah berapa banyak unit test yang tercover untuk setiap method/function di suatu workspace
+            Test coverage sendiri dibagi menjadi 2:
+                - apakah semua function sudah ada unit testnya?
+                - apakah semua conditional statement (if else, switch case) dalam satu function udah tercover semua atau belum
+    
+    Code quality (sonarqube):
+        - code coverage
+        - code duplication
 
-Middleware:
-    - apa itu middleware
-    - kenapa middleware ada
-    - middleware x cotext
+    untuk mencapai suatu close loop test, kita bisa mocking data dengan menggunakan gomock
+    https://www.youtube.com/watch?v=KJXXboJz7BA&t=849s&ab_channel=AminMir
 
-    middleware bisa diassign di:
-        - gin router group
-        - gin method (POST, GET, etc)
-        - gin.USE di paling depan (berlaku untuk semua request yang masokk)
-JWT:
-    - encoding and decoding concept
-        - base64
-        - hash
-    - apa itu jwt
-    - kenapa jwt ada
-    - bagian dari JWT
-        - header
-        - body
-        - signature
-    - playing around with katara's jwt lib
-        - encode
-        - decode
-        - verify
-https://www.base64decode.org/
-https://emn178.github.io/online-tools/sha1.html
-https://jwt.io/
----
-[!alt_day10](./day10.drawio.png)
+    example repo for gomock:
+    git@github.com:Calmantara/go-playground.git
+
+    untuk menjalankan test di go
+    1. menggunakan debugger test (vscode, goland)
+    2. go test ./...
+    3. go test 
+    4. go test -coverprofile cov.out ./...

@@ -1,0 +1,9 @@
+mode: set
+github.com/Calmantara/go-fga/pkg/usecase/crypto/jwt.go:14.64,23.16 2 1
+github.com/Calmantara/go-fga/pkg/usecase/crypto/jwt.go:26.2,26.27 1 1
+github.com/Calmantara/go-fga/pkg/usecase/crypto/jwt.go:23.16,25.3 1 0
+github.com/Calmantara/go-fga/pkg/usecase/crypto/jwt.go:29.73,34.16 2 0
+github.com/Calmantara/go-fga/pkg/usecase/crypto/jwt.go:38.2,39.16 2 0
+github.com/Calmantara/go-fga/pkg/usecase/crypto/jwt.go:42.2,42.15 1 0
+github.com/Calmantara/go-fga/pkg/usecase/crypto/jwt.go:34.16,35.13 1 0
+github.com/Calmantara/go-fga/pkg/usecase/crypto/jwt.go:39.16,40.13 1 0

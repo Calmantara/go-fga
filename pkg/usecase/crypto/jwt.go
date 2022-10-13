@@ -11,12 +11,19 @@ var (
 	sharedKey = []byte("sercrethatmaycontainch@r$32chars")
 )
 
-func CreateJWT(ctx context.Context, claim any) string {
+func CreateJWT(ctx context.Context, claim any) (string, error) {
+
+	// expected:
+	// 1. function ini akan membuat jwt token
+	// 2. jtw token akan berbeda disetiap claim
+	// 3. tidak ada error yang terjadi ketika token berhasil dibuat
+	// 4. error akan terjadi ketika claim tidak sesuai dengan format (json)
+
 	token, err := jwt.Sign(jwt.HS256, sharedKey, claim)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
-	return string(token)
+	return string(token), nil
 }
 
 func VerifyJWT(ctx context.Context, token string) (claims claim.Access) {
