@@ -2,7 +2,7 @@
 
 ## Day 11
 
-Testing in Development
+- Testing in Development
      - SDLC (software development life cycle)
         sdlc -> life cycle mulai dari menerima req, planning, designing, implementation, test, hingga evaluation
      - STLC (software test life cycle)
@@ -25,26 +25,25 @@ Testing in Development
         - prod test / smoke test
             test singkat yang dilakukan ketika sudah naik ke production (qa)
     
-    di golang:
-        - unit test
-        - test coverage 
-            mendeteksi sudah berapa banyak unit test yang tercover untuk setiap method/function di suatu workspace
-            Test coverage sendiri dibagi menjadi 2:
-                - apakah semua function sudah ada unit testnya?
-                - apakah semua conditional statement (if else, switch case) dalam satu function udah tercover semua atau belum
-    
-    Code quality (sonarqube):
-        - code coverage
-        - code duplication
+- golang:
+   - unit test
+   - test coverage 
+       mendeteksi sudah berapa banyak unit test yang tercover untuk setiap method/function di suatu workspace
+       Test coverage sendiri dibagi menjadi 2:
+           - apakah semua function sudah ada unit testnya?
+           - apakah semua conditional statement (if else, switch case) dalam satu function udah tercover semua atau belum
 
-    untuk mencapai suatu close loop test, kita bisa mocking data dengan menggunakan gomock
-    https://www.youtube.com/watch?v=KJXXboJz7BA&t=849s&ab_channel=AminMir
+- Code quality (sonarqube):
+   - code coverage
+   - code duplication
+     untuk mencapai suatu close loop test, kita bisa mocking data dengan menggunakan gomock
+     https://www.youtube.com/watch?v=KJXXboJz7BA&t=849s&ab_channel=AminMir
 
-    example repo for gomock:
-    git@github.com:Calmantara/go-playground.git
+example repo for gomock:
+git@github.com:Calmantara/go-playground.git
 
-    untuk menjalankan test di go
-    1. menggunakan debugger test (vscode, goland)
-    2. go test ./...
-    3. go test 
-    4. go test -coverprofile cov.out ./...
+untuk menjalankan test di go
+1. menggunakan debugger test (vscode, goland)
+2. go test ./...
+3. go test 
+4. go test -coverprofile cov.out ./...
