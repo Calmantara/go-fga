@@ -1,50 +1,328 @@
 # FGA Kominfo Learning
 
-## Day 11
+## Final Project
 
-Testing in Development
-     - SDLC (software development life cycle)
-        sdlc -> life cycle mulai dari menerima req, planning, designing, implementation, test, hingga evaluation
-     - STLC (software test life cycle)
-        stlc -> test life cycle (yang biasa dilakukan dev / qa) untuk membuat test case hingga automation test
-     - Testing in software development
-        - unit test
-            test yang dibuat untuk mengetest semua scenario yang bisa terjadi di suatu function (dev)
-        - integration test
-            test yang dilakukan untuk mencoba integrasi dalama 1 fitur (baik cross team atau dalam 1 code base) (dev) 
-        - qa test
-            test yang dilakukan baik secara manual atau otomatis untuk menjawab test case yang sudah dibuat dalam stlc (qa)
-            - automation test
-            - manual test
-            - security test (security engineer)
-            - load test
-                supaya kita tau apakah logic codingan kita, sudah optimized atau belum
-                sehingga bisa menampung load / request dalam waktu yang bersamaan sangat banyak
-        - UAT test 
-            test yang dilakukan oleh pemberi req (business team), untuk memastikan tidak adanya missed req, tidak ada bug, dan siap untuk naik production (business)
-        - prod test / smoke test
-            test singkat yang dilakukan ketika sudah naik ke production (qa)
-    
-    di golang:
-        - unit test
-        - test coverage 
-            mendeteksi sudah berapa banyak unit test yang tercover untuk setiap method/function di suatu workspace
-            Test coverage sendiri dibagi menjadi 2:
-                - apakah semua function sudah ada unit testnya?
-                - apakah semua conditional statement (if else, switch case) dalam satu function udah tercover semua atau belum
-    
-    Code quality (sonarqube):
-        - code coverage
-        - code duplication
+Claim JWT:
+```
+	JWTID          uuid.UUID `json:"jti"`   // menandakan id berapa untuk token ini
+	Subject        string    `json:"sub"`   // token ini untuk user siapa (user id)
+	Issuer         string    `json:"iss"`   // token ini dibuat oleh siapa
+	Audience       string    `json:"aud"`   // token ini boleh digunakan oleh siapa
+	Scope          string    `json:"scope"` // optional menandakan bisa mengakses apa aja
+	Type           string    `json:"type"`  // tipe dari token ini
+	IssuedAt       int64     `json:"iat"`   // token ini dibuat kapan
+	NotValidBefore int64     `json:"nbf"`   // token ini boleh digunakan setelah kapan
+	ExpiredAt      int64     `json:"exp"`   // token ini akan expired kapan
+```
+    Scope:
+        - create update delete read
+---
+Claim ID Token:
+```
+	JWTID          uuid.UUID `json:"jti"`  
+    Username       string    `json:"username"`
+    Email          string    `json:"email"`
+    DOB            time.Time `json:"dob"`
+```
+---
+Proses Authentication:
+```
+Mengecheck apakah user_id (subject) itu benar adanya di system kita
+```
+---
+Proses Authorization: 
+```
+Mengecheck apakah scope di dalam JWT berhak untuk melakukan request
 
-    untuk mencapai suatu close loop test, kita bisa mocking data dengan menggunakan gomock
-    https://www.youtube.com/watch?v=KJXXboJz7BA&t=849s&ab_channel=AminMir
+Jika JWT tidak sesuai dengan scope nya, maka akan memunculkan status request 403 (forbidden)
+```
+---
+Standard Response
+```
+success
+{
+    "code" : "<int>",
+    "message:"<string>",
+    "type":"<string>",
+    "data":"<any>"
+}
+code:
+    - 00 -> status ok (get)
+    - 01 -> status accepted (create, delete, update)
+type:
+    - SUCCESS -> ok (200)
+    - ACCEPTED -> accespted (201)
 
-    example repo for gomock:
-    git@github.com:Calmantara/go-playground.git
+error
+{
+    "code" : "<int>",
+    "message:"<string>",
+    "type":"<string>",
+    "invalid_arg":{
+        "error_type":"<string>",
+        "error_message":"<string>"
+    }
+}
+code:
+    - 99 -> status internal server error (500)
+    - 98 -> status forbidden (403)
+    - 97 -> status unauthenticated (401)
+    - 96 -> status bad request (400)
+type:
+    - INTERNAL_SERVER_ERROR
+    - FORBIDDEN
+    - UNAUTHENTICATED
+    - BAD_REQUEST
+error_type:
+    - INTERNAL_CONNECTION_PROBLEM
+    - INVALID_SCOPE
+    - WRONG_PASSWORD
+    - WRONG_USERNAME
+    - USER_NOT_FOUND
+    - WRONG_EMAIL_FORMAT
+    - INVALID_PASSWORD_FORMAT
 
-    untuk menjalankan test di go
-    1. menggunakan debugger test (vscode, goland)
-    2. go test ./...
-    3. go test 
-    4. go test -coverprofile cov.out ./...
+```
+---
+Base API Standard:
+- ada versioning
+- ada prefix
+```
+/api/mygram/v1/**
+```
+---
+Auth Endpoints:
+- Login
+untuk login user yang sudah teregister
+```
+method: POST
+url: /auth/login
+body:
+    {
+        "email":"email format",
+        "password":"minimal 6 digits"
+    }
+response:
+    {
+        "code" : "<int>",
+        "message:"<string>",
+        "type":"<string>",
+        "data":
+            {
+                "access_token":"<jwt string>",
+                "refresh_token":"<jwt string>",
+                "id_token":"<jwt string>"
+            }
+    }
+```
+- Refresh
+untuk refresh token ketika access token sudah expired
+```
+method: POST
+url: /auth/refresh
+header:
+    {
+        "Authorization":"<Bearer refresh_token>"
+    }
+response:
+    {
+        "code" : "<int>",
+        "message:"<string>",
+        "type":"<string>",
+        "data":
+            {
+                "access_token":"<jwt string>",
+                "refresh_token":"<jwt string>",
+                "id_token":"<jwt string>"
+            }
+    }
+```
+
+---
+User Endpoints:
+- Register User
+untuk meregisterkan user baru (email dan username unique)
+```
+method: POST
+url: /users/register -> /api/mygram/v1/users/register
+body:
+    {
+        "dob":"yyyy-mm-dd",
+        "email":"email format",
+        "password":"minimal 6 digits",
+        "username":"unique string"
+    }
+response:
+    {
+        "code" : "<int>",
+        "message:"<string>",
+        "type":"<string>",
+        "data":
+            {
+                "age":"<int>",
+                "email":"<string>",
+                "id":"<int>",
+                "username":"<string>"
+            }
+    }
+```
+- Get User
+untuk mendapatkan user detail berdasarkan specific id
+```
+method: GET
+url: /users/:user_id
+response:
+    {
+        "code" : "<int>",
+        "message:"<string>",
+        "type":"<string>",
+        "data":
+            {
+                "id":"<int>",
+                "username":"<string>",
+                "social_medias":[
+                    {
+                        social_media_json
+                    },
+                    {
+                        social_media_json
+                    },
+                    {
+                        social_media_json
+                    }
+                ]
+            }
+    }
+```
+
+- Update User
+untuk mengupdate user information 
+```
+method: PUT
+url: /users/:user_id
+header:
+    {
+        "Authorization":"<Bearer access_token>"
+    }
+body:
+    {
+        "email":"email format",
+        "username":"unique string"
+    }
+response:
+    {
+        "code" : "<int>",
+        "message:"<string>",
+        "type":"<string>",
+        "data":
+            {
+                "id_token":"<jwt string>"
+            }
+    }
+```
+- Delete User
+untuk delete user, dalam hal ini soft delete (menambahkan flag di deleted_at)
+```
+method: DELETE
+url: /auth/users
+header:
+    {
+        "Authorization":"<Bearer access_token>"
+    }
+```
+---
+Photo Endpoints:
+- Post Photo
+untuk menambahkan foto kepemilikan user, user_id yang didapatkan di access token
+
+- Get Photos
+untuk mendapatkan semua foto milik user tertentu, user_id didapatkan di access token
+
+- Get Specific Photos By User Id
+untuk specific foto berdasarkan user id tertentu
+```
+method: GET
+url: /photos?user_id=<int>
+response:
+    {
+        "code" : "<int>",
+        "message:"<string>",
+        "type":"<string>",
+        "data":
+            [
+                {photo_json},
+                {photo_json},
+                {photo_json}
+            ]
+    }
+```
+
+- Get Specific Photos By Id
+untuk specific foto berdasarkan id milik user tertentu
+```
+method: GET
+url: /photos?id=<int>
+response:
+    {
+        "code" : "<int>",
+        "message:"<string>",
+        "type":"<string>",
+        "data":
+            {
+                "id",
+                "title",
+                "caption",
+                "url",
+                "user_id",
+                "comments":[
+                    {comment_json},
+                    {comment_json},
+                    {comment_json}
+                ]
+            }
+    }
+```
+
+- Update Photo
+untuk mengupdate foto dengan id tertentu, user hanya bisa mengupdate foto miliknya dia sendiri
+- Delete Photo
+untuk mendelete foto dengan id tertentu, user hanya bisa mendelete foto miliknya sendiri
+
+---
+Comment Endpoints:
+- Post Comment
+untuk menambahkan comment pada foto dengan id tertentu (id diletakkan dalam body payload)
+- Get Comment 
+untuk mendapatkan semua comments yang sudah di post oleh user tertentu
+- Update Comment
+untuk mengupdate comment pada photo tertentu, user hanya bisa mengupdate comment miliknya dia sendiri
+- Delete Comment
+untuk mendelete comment pada photo tertentu, user hanya bisa mendelete comment miliknya dia sendiri
+
+---
+Social Media Endpoints:
+satu user bisa memiliki banyak social media
+
+- Post Social Media
+untuk menambahkan social media pada user tertentu, user id didapatkan pada access_token
+- Get Social Media
+untuk mendapatkan semua social media pada user tertentu, user id didapatkan pada access token
+- Update Social Media
+untuk mengupdate social media milik user tertentu, user hanya bisa mengupdate social media milik dia sendiri
+- Delete Social Media
+untuk mendelete social media milik user tertentu, user hanya bisa mendelete social media milik dia sendiri
+
+---
+Deployment
+1. kalian harus ada .env file yang berisikan env variable apa itu env variable, ini adalah variable yang bisa di config atau diubah tanpa mengubah codingan
+    - ref: https://towardsdatascience.com/use-environment-variable-in-your-next-golang-project-39e17c3aaa66
+    - go get github.com/joho/godotenv
+2. menjalankan `go build` untuk mendapatkan binary file dari go
+3. copy binary `file` dan `.env` ke server
+4. jalankan binary file dengan menggunakan systemctl (ubuntu)
+5. yeay terdeploy
+
+---
+Table Relation
+
+![alt_diagram](./day12.drawio.png)

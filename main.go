@@ -2,12 +2,15 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/Calmantara/go-fga/config/postgres"
 	"github.com/Calmantara/go-fga/pkg/domain/message"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 
 	engine "github.com/Calmantara/go-fga/config/gin"
 	docs "github.com/Calmantara/go-fga/docs"
@@ -17,6 +20,7 @@ import (
 	userusecase "github.com/Calmantara/go-fga/pkg/usecase/user"
 	swaggerfiles "github.com/swaggo/files"
 	ginswagger "github.com/swaggo/gin-swagger"
+	bcrypt "golang.org/x/crypto/bcrypt"
 )
 
 // comment dalam go
@@ -36,12 +40,17 @@ import (
 func main() {
 	// generate postgres config and connect to postgres
 	// this postgres client, will be used in repository layer
+	postgresHost := os.Getenv("MY_GRAM_POSTGRES_HOST")
+	postgresPort := os.Getenv("MY_GRAM_POSTGRES_PORT")
+	postgresDatabase := os.Getenv("MY_GRAM_POSTGRES_DATABASE")
+	postgresUsername := os.Getenv("MY_GRAM_POSTGRES_USERNAME")
+	postgresPassword := os.Getenv("MY_GRAM_POSTGRES_PASSWORD")
 	postgresCln := postgres.NewPostgresConnection(postgres.Config{
-		Host:         "localhost",
-		Port:         "5432",
-		User:         "postgres",
-		Password:     "postgresAdmin",
-		DatabaseName: "postgres",
+		Host:         postgresHost,
+		Port:         postgresPort,
+		User:         postgresUsername,
+		Password:     postgresPassword,
+		DatabaseName: postgresDatabase,
 	})
 
 	// gin engine
@@ -112,6 +121,30 @@ func main() {
 	// - create order
 	// - get order by user
 
+	// Bycrypt
+	// standard library yang digunakan untuk
+	// membuat suatu HASH STRING
+	// dan kita bisa mengcompare HASH STRING tersebut dengan
+	// HASH STRING lainnya
+	password := "calman123"
+	passwordByte, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	//$2a$10$02lfQ7eyZZC6henmroSjEucBnd1hO/oD5vwpn8rASkWYp9D/LusSG
+	// passwordByte ini yang HARUS DISIMPAN DIDALAM DATABASE
+	// bukan password plain text
+	fmt.Println(string(passwordByte))
+
+	// compare password dengan hash string
+	// passwordByte nantinya akan didapatkan dari database
+	// password akan didapatkan dari body request (/auth/login)
+	err := bcrypt.CompareHashAndPassword(passwordByte, []byte(password))
+	if err != nil {
+		fmt.Println("password is unmatched")
+	}
+
 	// running the service
 	ginEngine.Serve()
+}
+
+func init() {
+	godotenv.Load(".env")
 }
