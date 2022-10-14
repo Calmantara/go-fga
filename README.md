@@ -325,4 +325,14 @@ Deployment
 ---
 Table Relation
 
+contoh untuk membuat unique key pada column
+```
+CREATE TABLE person (
+	id SERIAL PRIMARY KEY,
+	first_name VARCHAR (50),
+	last_name VARCHAR (50),
+	email VARCHAR (50) UNIQUE
+);
+```
+
 ![alt_diagram](./day12.drawio.png)
