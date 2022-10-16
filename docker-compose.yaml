@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  # postgres setup
+  fga-postgres:
+    build: ./infra/pg
+    container_name: fga-postgres
+    ports:
+      - "5434:5432"
+    # restart: "always"
+    env_file:
+      - "app.env"
+    volumes:
+      - "./pg-data:/var/lib/postgresql/data"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "500M"
+    networks:
+      work-vnet:
+  go-fga1:
+    build: .
+    container_name: go-fga1
+    ports:
+      - "8081:8080"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "500M"
+    depends_on:
+      - fga-postgres
+    networks:
+      work-vnet:
+
+networks:
+  work-vnet:
+    name: fga
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 100.100.0.0/16

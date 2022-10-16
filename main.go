@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -20,7 +19,6 @@ import (
 	userusecase "github.com/Calmantara/go-fga/pkg/usecase/user"
 	swaggerfiles "github.com/swaggo/files"
 	ginswagger "github.com/swaggo/gin-swagger"
-	bcrypt "golang.org/x/crypto/bcrypt"
 )
 
 // comment dalam go
@@ -111,36 +109,6 @@ func main() {
 	// initiate router
 	v1.NewUserRouter(ginEngine, useHandler).Routers()
 	v1.NewLoginRouter(ginEngine).Routers()
-	// ASSESSMENT
-	// buat API
-	// - get user
-	// sebelum membuat order
-	//	- table dengan relasi order -> user (FOREIGN KEY)
-	// 			ref:https://www.postgresqltutorial.com/postgresql-tutorial/postgresql-create-table/
-	// 	- code base untuk repo, usecase, dll
-	// - create order
-	// - get order by user
-
-	// Bycrypt
-	// standard library yang digunakan untuk
-	// membuat suatu HASH STRING
-	// dan kita bisa mengcompare HASH STRING tersebut dengan
-	// HASH STRING lainnya
-	password := "calman123"
-	passwordByte, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	//$2a$10$02lfQ7eyZZC6henmroSjEucBnd1hO/oD5vwpn8rASkWYp9D/LusSG
-	// passwordByte ini yang HARUS DISIMPAN DIDALAM DATABASE
-	// bukan password plain text
-	fmt.Println(string(passwordByte))
-
-	// compare password dengan hash string
-	// passwordByte nantinya akan didapatkan dari database
-	// password akan didapatkan dari body request (/auth/login)
-	err := bcrypt.CompareHashAndPassword(passwordByte, []byte(password))
-	if err != nil {
-		fmt.Println("password is unmatched")
-	}
-
 	// running the service
 	ginEngine.Serve()
 }

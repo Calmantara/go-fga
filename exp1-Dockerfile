@@ -1,0 +1,13 @@
+# Scenario 1 -> langsung copy code
+FROM golang:latest
+
+# define workspace
+RUN mkdir -p /app
+WORKDIR /app
+
+# Copy semua code dan assets ke image ini
+COPY . .
+
+# RUNNING THE PROGRAM
+RUN go mod tidy
+CMD [ "go", "run", "main.go" ]  

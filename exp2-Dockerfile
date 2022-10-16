@@ -1,0 +1,36 @@
+# scenario 2 : copy binary yang sudah di built
+
+# alpine: linux distro
+# ga ada program apa apa didalamnya
+# go, python, node, dll itu ga ada di alpine
+# tapi alpine bisa menjalankan binary 
+# yang sudah di built dari env sebelumnya
+FROM alpine:latest
+
+# make work dir
+RUN mkdir -p /app
+WORKDIR /app
+
+# sebelum copy go binary
+# perhatikan spesifikasi mesin yang ngebuild binary
+# dan spesifikasi yang akan menjalankan binary
+
+# laptop calman
+# macbook M1
+# os go darwin
+# arc ARM64
+
+# biasanya linux / server / VM
+# yang common digunakan adalah
+# os go linux
+# arc AMD64
+
+# ketika kita build
+# lebih baik kita definisikan os dan arc 
+# yang akan kita gunakan
+
+# copy binary and .env
+COPY go-fga .
+COPY .env .
+
+CMD ["./go-fga"]
