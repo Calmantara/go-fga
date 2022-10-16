@@ -61,3 +61,6 @@
 2. SSH
 3. VM/Server dan DNS (aws)
 4. CI/CD in theory
+
+---
+![alt_extra1](./extra1.png)
