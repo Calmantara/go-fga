@@ -67,22 +67,10 @@ func (u *UserHdlImpl) InsertUserHdl(ctx *gin.Context) {
 	// call service/usecase untuk menginsert data
 	log.Println("calling insert service usecase")
 
-	result, err := u.userUsecase.InsertUserSvc(ctx, user)
-	if err != nil {
-		switch err.Error() {
-		case "BAD_REQUEST":
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, message.Response{
-				Code:  80,
-				Error: "invalid processing payload",
-			})
-			return
-		case "INTERNAL_SERVER_ERROR":
-			ctx.AbortWithStatusJSON(http.StatusInternalServerError, message.Response{
-				Code:  99,
-				Error: "something went wrong",
-			})
-			return
-		}
+	result, errMsg := u.userUsecase.InsertUserSvc(ctx, user)
+	if errMsg.Error != nil {
+		ErrorSwitcher(ctx, errMsg)
+		return
 	}
 	// response result for the user if success
 	ctx.JSONP(http.StatusOK, message.Response{
@@ -90,4 +78,18 @@ func (u *UserHdlImpl) InsertUserHdl(ctx *gin.Context) {
 		Message: "success insert user",
 		Data:    result,
 	})
+}
+func ErrorSwitcher(ctx *gin.Context, errMsg message.ErrorMessage) {
+	switch errMsg.Type {
+	case "BAD_REQUEST":
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, message.Response{
+			Code:  80,
+			Error: errMsg.Error.Error(),
+		})
+	case "INTERNAL_SERVER_ERROR":
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, message.Response{
+			Code:  99,
+			Error: errMsg.Error.Error(),
+		})
+	}
 }
