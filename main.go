@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"os"
 	"time"
@@ -110,6 +112,37 @@ func main() {
 	v1.NewUserRouter(ginEngine, useHandler).Routers()
 	v1.NewLoginRouter(ginEngine).Routers()
 	// running the service
+
+	// for template rendering
+	ginEngine.GetGin().LoadHTMLFiles("template/index.html")
+	type DataPoint struct {
+		Water int `json:"water"`
+		Wind  int `json:"wind"`
+	}
+	data := []DataPoint{}
+	ginEngine.GetGin().GET("/index", func(c *gin.Context) {
+		newData := DataPoint{
+			Water: rand.Intn(100),
+			Wind:  rand.Intn(100),
+		}
+
+		latestStatus := "NORMAL"
+		if newData.Wind > 8 {
+			if newData.Water > 8 {
+				latestStatus = "BAHAYA"
+			}
+		}
+		data = append(data, newData)
+
+		file, _ := json.MarshalIndent(data, "", " ")
+		_ = ioutil.WriteFile("test.json", file, 0644)
+
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"title":         "Value website",
+			"latest_status": latestStatus,
+			"data":          data,
+		})
+	})
 	ginEngine.Serve()
 }
 
