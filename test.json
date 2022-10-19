@@ -1,90 +1,107 @@
 [
  {
   "water": 81,
-  "wind": 87
+  "wind": 87,
+  "status": "BAHAYA"
  },
  {
   "water": 47,
-  "wind": 59
+  "wind": 59,
+  "status": "BAHAYA"
  },
  {
   "water": 81,
-  "wind": 18
+  "wind": 18,
+  "status": "BAHAYA"
  },
  {
   "water": 25,
-  "wind": 40
+  "wind": 40,
+  "status": "BAHAYA"
  },
  {
   "water": 56,
-  "wind": 0
+  "wind": 0,
+  "status": "NORMAL"
  },
  {
   "water": 94,
-  "wind": 11
+  "wind": 11,
+  "status": "BAHAYA"
  },
  {
   "water": 62,
-  "wind": 89
+  "wind": 89,
+  "status": "BAHAYA"
  },
  {
   "water": 28,
-  "wind": 74
+  "wind": 74,
+  "status": "BAHAYA"
  },
  {
   "water": 11,
-  "wind": 45
+  "wind": 45,
+  "status": "BAHAYA"
  },
  {
   "water": 37,
-  "wind": 6
+  "wind": 6,
+  "status": "NORMAL"
  },
  {
   "water": 95,
-  "wind": 66
+  "wind": 66,
+  "status": "BAHAYA"
  },
  {
   "water": 28,
-  "wind": 58
+  "wind": 58,
+  "status": "BAHAYA"
  },
  {
   "water": 47,
-  "wind": 47
+  "wind": 47,
+  "status": "BAHAYA"
  },
  {
   "water": 87,
-  "wind": 88
+  "wind": 88,
+  "status": "BAHAYA"
  },
  {
   "water": 90,
-  "wind": 15
+  "wind": 15,
+  "status": "BAHAYA"
  },
  {
   "water": 41,
-  "wind": 8
+  "wind": 8,
+  "status": "NORMAL"
  },
  {
   "water": 87,
-  "wind": 31
+  "wind": 31,
+  "status": "BAHAYA"
  },
  {
   "water": 29,
-  "wind": 56
+  "wind": 56,
+  "status": "BAHAYA"
  },
  {
   "water": 37,
-  "wind": 31
+  "wind": 31,
+  "status": "BAHAYA"
  },
  {
   "water": 85,
-  "wind": 26
+  "wind": 26,
+  "status": "BAHAYA"
  },
  {
   "water": 13,
-  "wind": 90
- },
- {
-  "water": 94,
-  "wind": 63
+  "wind": 90,
+  "status": "BAHAYA"
  }
 ]

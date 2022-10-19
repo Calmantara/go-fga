@@ -116,8 +116,9 @@ func main() {
 	// for template rendering
 	ginEngine.GetGin().LoadHTMLFiles("template/index.html")
 	type DataPoint struct {
-		Water int `json:"water"`
-		Wind  int `json:"wind"`
+		Water  int    `json:"water"`
+		Wind   int    `json:"wind"`
+		Status string `json:"status"`
 	}
 	data := []DataPoint{}
 	ginEngine.GetGin().GET("/index", func(c *gin.Context) {
@@ -126,10 +127,10 @@ func main() {
 			Wind:  rand.Intn(100),
 		}
 
-		latestStatus := "NORMAL"
+		newData.Status = "NORMAL"
 		if newData.Wind > 8 {
 			if newData.Water > 8 {
-				latestStatus = "BAHAYA"
+				newData.Status = "BAHAYA"
 			}
 		}
 		data = append(data, newData)
@@ -139,8 +140,9 @@ func main() {
 
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"title":         "Value website",
-			"latest_status": latestStatus,
+			"latest_status": newData.Status,
 			"data":          data,
+			"last_index":    len(data) - 1,
 		})
 	})
 	ginEngine.Serve()

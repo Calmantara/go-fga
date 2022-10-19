@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="refresh" content="1">
+    <meta http-equiv="refresh" content="15">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.title}}</title>
+    <style>
+        table, th, td 
+            {
+                border: 1px solid black;
+            }
+    </style>
 </head>
 <body>
     <div>
@@ -14,7 +20,20 @@
     </div>
     <div>
         <div>Historical Data</div>
-        <div>{{.data}}</div>
+        <table>
+            <tr>
+                <th>Water</th>
+                <th>Wind</th>
+                <th>Status</th>
+            </tr>
+            {{ range .data}}
+                <tr>
+                    <td>{{ .Water }}</td>
+                    <td>{{ .Wind }}</td>
+                    <td>{{ .Status }}</td>
+                </tr>
+            {{ end}}
+        </table>
     </div>
 </body>
 </html>
