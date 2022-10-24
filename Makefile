@@ -1,0 +1,2 @@
+build:
+	@./build-artifact.sh

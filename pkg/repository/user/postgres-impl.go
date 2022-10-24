@@ -15,6 +15,7 @@ type UserRepoImpl struct {
 }
 
 func NewUserRepo(pgCln postgres.PostgresClient) user.UserRepo {
+	pgCln.GetClient().AutoMigrate(&user.User{})
 	return &UserRepoImpl{pgCln: pgCln}
 }
 

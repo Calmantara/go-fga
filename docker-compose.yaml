@@ -19,11 +19,11 @@ services:
           memory: "500M"
     networks:
       work-vnet:
-  go-fga1:
+  go-fga:
     build: .
-    container_name: go-fga1
+    container_name: go-fga
     ports:
-      - "8081:8080"
+      - "8080:8080"
     deploy:
       resources:
         limits:
