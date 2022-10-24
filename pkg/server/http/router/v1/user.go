@@ -3,7 +3,6 @@ package v1
 import (
 	engine "github.com/Calmantara/go-fga/config/gin"
 	"github.com/Calmantara/go-fga/pkg/domain/user"
-	"github.com/Calmantara/go-fga/pkg/server/http/middleware"
 	"github.com/Calmantara/go-fga/pkg/server/http/router"
 	"github.com/gin-gonic/gin"
 )
@@ -30,8 +29,7 @@ func (u *UserRouterImpl) get() {
 
 func (u *UserRouterImpl) post() {
 	// all path for post method are here
-	u.routerGroup.POST("",
-		middleware.CheckJwtAuth, u.userHandler.InsertUserHdl)
+	u.routerGroup.POST("", u.userHandler.InsertUserHdl)
 }
 
 func (u *UserRouterImpl) Routers() {

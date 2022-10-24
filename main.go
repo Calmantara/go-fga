@@ -55,7 +55,7 @@ func main() {
 
 	// gin engine
 	ginEngine := engine.NewGinHttp(engine.Config{
-		Port: ":8080",
+		Port: ":9090",
 	})
 
 	// setiap request yang datang ke API ini,
